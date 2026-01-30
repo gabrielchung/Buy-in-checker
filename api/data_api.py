@@ -1,8 +1,8 @@
 import pandas as pd
 import yfinance as yf
 
-def get_symbol_data(symbol, period="1mo"):
-    data = yf.download(symbol, period=period)
+def get_ticker_data(ticker, period="1mo"):
+    data = yf.download(ticker, period=period)
 
     # Flatten MultiIndex columns cleanly
     if isinstance(data.columns, pd.MultiIndex):
@@ -13,7 +13,7 @@ def get_symbol_data(symbol, period="1mo"):
 
     return data
 
-def download(symbol, period="1mo"):
+def download(ticker, period="1mo"):
     # create data folder
     import os
     if not os.path.exists("data"):
@@ -22,7 +22,7 @@ def download(symbol, period="1mo"):
     # export data to csv including date stamp for the filename
     from datetime import datetime
     date_stamp = datetime.now().strftime("%Y%m%d")
-    filename = f"data/{symbol}_data_{date_stamp}_{period}.csv"
+    filename = f"data/{ticker}_data_{date_stamp}_{period}.csv"
     
     if os.path.exists(filename):
         print(f"File {filename} already exists. Skipping download.")
@@ -31,7 +31,7 @@ def download(symbol, period="1mo"):
         data = pd.read_csv(filename)
     else:
         # Get one year data
-        data = get_symbol_data(symbol, period=period)
+        data = get_ticker_data(ticker, period=period)
         data.to_csv(filename, index=False)
         print(f"Saved {len(data)} rows to {filename}")
     
