@@ -119,22 +119,46 @@ if __name__ == "__main__":
     ui_api.display_bars(low_r, high_r, current_price_r)
 
     # Analysis
-    yearly_average_daily_growth_rate = _safe_rate(analysis_api.get_average_daily_growth_rate(data_yearly))
-    yearly_average_daily_growth_rate_in_perc = _rate_to_percent(yearly_average_daily_growth_rate)
+    # yearly_average_daily_growth_rate = _safe_rate(analysis_api.get_average_daily_growth_rate(data_yearly))
+    # yearly_average_daily_growth_rate_in_perc = _rate_to_percent(yearly_average_daily_growth_rate)
 
-    three_monthly_average_daily_growth_rate = _safe_rate(analysis_api.get_average_daily_growth_rate(data_three_monthly))
-    three_monthly_average_daily_growth_rate_in_perc = _rate_to_percent(three_monthly_average_daily_growth_rate)
+    # three_monthly_average_daily_growth_rate = _safe_rate(analysis_api.get_average_daily_growth_rate(data_three_monthly))
+    # three_monthly_average_daily_growth_rate_in_perc = _rate_to_percent(three_monthly_average_daily_growth_rate)
 
-    monthly_average_daily_growth_rate = _safe_rate(analysis_api.get_average_daily_growth_rate(data_monthly))
-    monthly_average_daily_growth_rate_in_perc = _rate_to_percent(monthly_average_daily_growth_rate)
+    # monthly_average_daily_growth_rate = _safe_rate(analysis_api.get_average_daily_growth_rate(data_monthly))
+    # monthly_average_daily_growth_rate_in_perc = _rate_to_percent(monthly_average_daily_growth_rate)
 
-    # Calculate days to reach high price from current price
-    days_yearly = _safe_days_to_target(current_price, high, yearly_average_daily_growth_rate)
-    days_three_monthly = _safe_days_to_target(current_price, high, three_monthly_average_daily_growth_rate)
-    days_monthly = _safe_days_to_target(current_price, high, monthly_average_daily_growth_rate)
+    # # Calculate days to reach high price from current price
+    # days_yearly = _safe_days_to_target(current_price, high, yearly_average_daily_growth_rate)
+    # days_three_monthly = _safe_days_to_target(current_price, high, three_monthly_average_daily_growth_rate)
+    # days_monthly = _safe_days_to_target(current_price, high, monthly_average_daily_growth_rate)
+
+    # print()
+    # print(f"Days to reach 1-month high price ({high_r}) from current price ({current_price_r}):")
+    # print(f"  Using Yearly Average Daily Growth Rate: {_fmt_days(days_yearly)}. Rates={_fmt_percent(yearly_average_daily_growth_rate_in_perc)}")
+    # print(f"  Using Three Monthly Average Daily Growth Rate: {_fmt_days(days_three_monthly)}. Rates={_fmt_percent(three_monthly_average_daily_growth_rate_in_perc)}")
+    # print(f"  Using Monthly Average Daily Growth Rate: {_fmt_days(days_monthly)}. Rates={_fmt_percent(monthly_average_daily_growth_rate_in_perc)}")
+
+    periods = [
+        ("Yearly", data_yearly),
+        ("Three Monthly", data_three_monthly),
+        ("Monthly", data_monthly),
+    ]
+
+    results = []
+
+    for label, df in periods:
+        rate = _safe_rate(analysis_api.get_average_daily_growth_rate(df))
+        rate_perc = _rate_to_percent(rate)
+        days = _safe_days_to_target(current_price, high, rate)
+
+        results.append((label, days, rate_perc))
 
     print()
     print(f"Days to reach 1-month high price ({high_r}) from current price ({current_price_r}):")
-    print(f"  Using Yearly Average Daily Growth Rate: {_fmt_days(days_yearly)}. Rates={_fmt_percent(yearly_average_daily_growth_rate_in_perc)}")
-    print(f"  Using Three Monthly Average Daily Growth Rate: {_fmt_days(days_three_monthly)}. Rates={_fmt_percent(three_monthly_average_daily_growth_rate_in_perc)}")
-    print(f"  Using Monthly Average Daily Growth Rate: {_fmt_days(days_monthly)}. Rates={_fmt_percent(monthly_average_daily_growth_rate_in_perc)}")
+
+    for label, days, rate_perc in results:
+        print(
+            f"  Using {label} Average Daily Growth Rate: "
+            f"{_fmt_days(days)}. Rates={_fmt_percent(rate_perc)}"
+        )
