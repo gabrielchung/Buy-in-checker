@@ -13,11 +13,7 @@ def get_symbol_data(symbol, period="1mo"):
 
     return data
 
-def download(ticker, period="1mo"):
-    # read symbol from cli arguments
-    import sys
-    symbol = sys.argv[1] if len(sys.argv) > 1 else "QQQ"
-
+def download(symbol, period="1mo"):
     # create data folder
     import os
     if not os.path.exists("data"):
@@ -40,8 +36,3 @@ def download(ticker, period="1mo"):
         print(f"Saved {len(data)} rows to {filename}")
     
     return data
-
-# if __name__ == "__main__":
-#     qqq_data = get_symbol_short_term_data("QQQ")
-#     qqq_data.to_csv("qqq_data.csv", index=False)
-#     print("Saved", len(qqq_data), "rows to qqq_data.csv")
